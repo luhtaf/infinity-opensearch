@@ -33,26 +33,25 @@ git clone https://github.com/luhtaf/infinity-opensearch.git
 cd infinity-opensearch/api_elastic
 ```
 
-## Setup Instructions
-
 ### 2. Set Up Virtual Environment
 
 Create a virtual environment to isolate your project dependencies:
 
 ```bash
 python3 -m venv venv
+```
 
 ### Activate the Virtual Environment
 
 - For Linux/MacOS:
   ```bash
-  source venv/bin/activate
+  source venv/bin/activate```
 
 ### Activate the Virtual Environment
 
 - For Windows:
   ```bash
-  venv\Scripts\activate
+  venv\Scripts\activate```
 
 ### 3. Install Dependencies
 
