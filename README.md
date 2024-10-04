@@ -65,7 +65,8 @@ pip install -r requirements.txt
 Create a configuration file from the provided example:
 
 ```bash
-cp config.yaml.example config.yaml```
+cp config.yaml.example config.yaml
+```
 
 Edit config.yaml and provide your OpenSearch URL, username, and password:
 
@@ -73,7 +74,8 @@ Edit config.yaml and provide your OpenSearch URL, username, and password:
 opensearch:
   url: "https://your-opensearch-url.com/api/elastic/"
   username: "<your_username>"
-  password: "<your_password>"```
+  password: "<your_password>"
+```
 
 Make sure to replace your_username and your_password with your actual OpenSearch credentials.
 
@@ -82,7 +84,8 @@ Make sure to replace your_username and your_password with your actual OpenSearch
 To start the Flask API, use the following command:
 
 ```bash
-python app.py```
+python app.py
+```
 
 The application will start in development mode and listen on http://127.0.0.1:5000/.
 
