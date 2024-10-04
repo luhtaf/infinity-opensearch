@@ -101,4 +101,4 @@ Feel free to fork the repository and open pull requests for any improvements or 
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for more information.
+This project is open source license, please use it wisely.
