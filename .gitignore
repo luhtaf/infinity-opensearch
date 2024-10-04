@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# macOS files
+.DS_Store
+
+# Pytest cache
+.pytest_cache/
+
+# Config file containing sensitive data
+config.yaml
+
+# pip dependency file
+*.lock
