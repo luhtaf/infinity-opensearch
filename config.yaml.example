@@ -1,0 +1,4 @@
+opensearch:
+  url: "https://your-opensearch-url.com/api/elastic/"
+  username: "<your_username>"
+  password: "<your_password>"
