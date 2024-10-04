@@ -1,4 +1,0 @@
-opensearch:
-  url: "https://bv044r97oosw.cloud.wazuh.com/api/elastic/"
-  username: "wazuh_admin"
-  password: "4ZoxLiYDyLs7lXxEQp7Jxx2YU4BMYmjp"
