@@ -192,7 +192,7 @@ def get_aggs_agent_event():
     return jsonify(result_dict)
 
 @app.route('/top10_alerts', methods=['GET'])
-def get_aggs_agent_event():
+def get_aggs_top10_alert():
     from_time = request.args.get('from')
     to_time = request.args.get('to')
     query= {
