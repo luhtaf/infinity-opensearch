@@ -284,5 +284,36 @@ def get_aggs_top10_mitre():
     data = response.json()
     return data
 
+@app.route('/raw_alert', methods=['GET'])
+def get_aggs_top10_mitre():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    size=request.args.get('size', default=10, type=int)
+    query= {
+        "size": size,
+        "sort": [
+            {
+            "@timestamp": {
+                "order": "desc"
+            }
+            }
+        ],
+        "query": {
+            "range": {
+            "@timestamp": {
+                "gte": from_time,
+                "lte": to_time,
+                "format": "epoch_millis"
+            }
+            }
+        }
+        }
+
+    index_pattern = "wazuh-alerts*"
+    url=f"{opensearch_url}/{index_pattern}/_search"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    data = response.json()
+    return data
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
