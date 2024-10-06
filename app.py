@@ -285,7 +285,7 @@ def get_aggs_top10_mitre():
     return data
 
 @app.route('/raw_alert', methods=['GET'])
-def get_aggs_top10_mitre():
+def get_latest_alert():
     from_time = request.args.get('from')
     to_time = request.args.get('to')
     size=request.args.get('size', default=10, type=int)
