@@ -187,10 +187,10 @@ def get_aggs_agent_event():
     url=f"{opensearch_url}/{index_pattern}/_search"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     data = response.json()
-    # buckets=buckets = data['aggregations']['agent_names']['buckets']
-    # result_dict = {bucket['key']: bucket['doc_count'] for bucket in buckets}
-    # return jsonify(result_dict)
-    return jsonify(data)
+    buckets=buckets = data['aggregations']['agent_names']['buckets']
+    result_dict = {bucket['key']: bucket['doc_count'] for bucket in buckets}
+    return jsonify(result_dict)
+    
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
