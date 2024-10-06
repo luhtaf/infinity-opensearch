@@ -16,7 +16,7 @@ headers = {
 app = Flask(__name__)
 
 # Endpoint to count documents
-@app.route('/count', methods=['GET','POST'])
+@app.route('/countall', methods=['GET','POST'])
 def get_count():
     from_time = request.args.get('from')
     to_time = request.args.get('to')
@@ -33,11 +33,132 @@ def get_count():
     }
 
     index_pattern = "wazuh-alerts*"
-    print("coba")
     url=f"{opensearch_url}/{index_pattern}/_count"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     # Return count response
     return jsonify(response.json())
+
+@app.route('/auth_success_count', methods=['GET'])
+def get_count_auth_success():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    { "match": { "rule.groups": "authentication_success" } },
+                    { 
+                        "range": {
+                            "@timestamp": {
+                            "gte": from_time,
+                            "lte": to_time
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+    index_pattern = "wazuh-alerts*"
+    url=f"{opensearch_url}/{index_pattern}/_count"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    return jsonify(response.json())
+
+@app.route('/medium_vuln_count', methods=['GET'])
+def get_count_medium_vuln():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    { "range": {
+                        "rule.level": {
+                            "gte": 7,
+                            "lte": 11
+                            }
+                        }
+                    },
+                    { 
+                        "range": {
+                            "@timestamp": {
+                            "gte": from_time,
+                            "lte": to_time
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+    index_pattern = "wazuh-alerts*"
+    url=f"{opensearch_url}/{index_pattern}/_count"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    return jsonify(response.json())
+
+@app.route('/high_vuln_count', methods=['GET'])
+def get_count_high_vuln():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    { "range": {
+                        "rule.level": {
+                            "gte": 12,
+                            "lte": 14
+                            }
+                        }
+                    },
+                    { 
+                        "range": {
+                            "@timestamp": {
+                            "gte": from_time,
+                            "lte": to_time
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+    index_pattern = "wazuh-alerts*"
+    url=f"{opensearch_url}/{index_pattern}/_count"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    return jsonify(response.json())
+
+@app.route('/critical_vuln_count', methods=['GET'])
+def get_count_critical_count():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    { "range": {
+                        "rule.level": {
+                            "gte": 15,
+                            }
+                        }
+                    },
+                    { 
+                        "range": {
+                            "@timestamp": {
+                            "gte": from_time,
+                            "lte": to_time
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+    index_pattern = "wazuh-alerts*"
+    url=f"{opensearch_url}/{index_pattern}/_count"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    return jsonify(response.json())
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

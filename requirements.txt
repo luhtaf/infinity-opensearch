@@ -1,3 +1,2 @@
 Flask
-opensearch-py
 PyYAML
