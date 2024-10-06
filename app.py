@@ -1,8 +1,7 @@
 from flask import Flask, request, jsonify
-from opensearchpy import OpenSearch
 import yaml
 import time
-
+import requests
 # Load configuration
 with open("config.yaml", "r") as config_file:
     config = yaml.safe_load(config_file)
@@ -11,24 +10,16 @@ with open("config.yaml", "r") as config_file:
 opensearch_url = config['opensearch']['url']
 username = config['opensearch']['username']
 password = config['opensearch']['password']
-
-# Initialize OpenSearch client
-client = OpenSearch(
-    [opensearch_url],
-    http_auth=(username, password),
-    verify_certs=True
-)
-
+headers = {
+    "Content-Type": "application/json"
+}
 app = Flask(__name__)
 
 # Endpoint to count documents
-@app.route('/count', methods=['GET'])
+@app.route('/count', methods=['GET','POST'])
 def get_count():
-    # Get 'from' and 'to' from request parameters (in epoch)
     from_time = request.args.get('from')
     to_time = request.args.get('to')
-
-    # Query for count with timestamp filter
     query = {
         "query": {
             "range": {
@@ -42,10 +33,11 @@ def get_count():
     }
 
     index_pattern = "wazuh-alerts*"
-    response = client.count(index=index_pattern, body=query)
-    
+    print("coba")
+    url=f"{opensearch_url}/{index_pattern}/_count"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
     # Return count response
-    return jsonify(response)
+    return jsonify(response.json())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
