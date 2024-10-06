@@ -343,7 +343,7 @@ def get_suricata_alert():
                     },
                     {
                         "term": {
-                            "alert.group": "suricata"
+                            "rule.groups": "suricata"
                         }
                     }
                 ]
