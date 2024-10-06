@@ -357,6 +357,48 @@ def get_suricata_alert():
     data = response.json()
     return data
 
+@app.route('/teler_alert', methods=['GET'])
+def get_teler_alert():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    size=request.args.get('size', default=10, type=int)
+    query={
+        "size": size,
+        "sort": [
+            {
+                "@timestamp": {
+                    "order": "desc"
+                }
+            }
+        ],
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": from_time,
+                                "lte": to_time,
+                                "format": "epoch_millis"
+                            }
+                        }
+                    },
+                    {
+                        "term": {
+                            "rule.groups": "teler"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+
+    index_pattern = "wazuh-alerts*"
+    url=f"{opensearch_url}/{index_pattern}/_search"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    data = response.json()
+    return data
+
 
 
 if __name__ == '__main__':
