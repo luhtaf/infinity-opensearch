@@ -399,6 +399,35 @@ def get_teler_alert():
     data = response.json()
     return data
 
+@app.route('/top10_category', methods=['GET'])
+def get_aggs_top10_teler_category():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    size=request.args.get('size', default=10, type=int)
+    query= {
+        "size": 0,
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": from_time,
+                    "lte": to_time
+                }
+            }
+        },
+        "aggs": {
+            "alert_level": {
+                "terms": {
+                    "field": "data.category",
+                    "size": size  
+                }
+            }
+        }
+    }
+    index_pattern = "*"
+    url=f"{opensearch_url}/{index_pattern}/_search"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    data = response.json()
+    return data
 
 
 if __name__ == '__main__':
