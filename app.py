@@ -182,7 +182,7 @@ def get_aggs_agent_event():
         }
     }
     index_pattern = "*"
-    url=f"{opensearch_url}/{index_pattern}/_count"
+    url=f"{opensearch_url}/{index_pattern}/_search"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     return jsonify(response.json())
 
