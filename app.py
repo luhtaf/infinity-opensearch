@@ -207,7 +207,7 @@ def get_aggs_top10_alert():
         }
     },
     "aggs": {
-        "agent_names": {
+        "alert_level": {
             "terms": {
                 "field": "rule.level",
                 "size": 10  
