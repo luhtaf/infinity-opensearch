@@ -159,28 +159,30 @@ def get_count_critical_count():
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     return jsonify(response.json())
 
-@app.route('/agent_event', methods=['GET'])
+@app.route('/top5_host_event', methods=['GET'])
 def get_aggs_agent_event():
     from_time = request.args.get('from')
     to_time = request.args.get('to')
     query= {
-        "size": 0,
-        "query": {
-            "range": {
-                "@timestamp": {
-                    "gte": from_time,
-                    "lte": to_time
-                }
+    "size": 0,
+    "query": {
+        "range": {
+            "@timestamp": {
+                "gte": from_time,
+                "lte": to_time
             }
-        },
-        "aggs": {
-            "agent_names": {
-                "terms": {
-                    "field": "agent.name"
-                }
+        }
+    },
+    "aggs": {
+        "agent_names": {
+            "terms": {
+                "field": "agent.name",
+                "size": 5  
             }
         }
     }
+}
+
     index_pattern = "*"
     url=f"{opensearch_url}/{index_pattern}/_search"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
