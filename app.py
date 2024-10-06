@@ -59,7 +59,7 @@ def get_count_auth_success():
             }
         }
     }
-    index_pattern = "wazuh-alerts*"
+    index_pattern = "*"
     url=f"{opensearch_url}/{index_pattern}/_count"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     return jsonify(response.json())
@@ -123,7 +123,7 @@ def get_count_high_vuln():
             }
         }
     }
-    index_pattern = "wazuh-alerts*"
+    index_pattern = "*"
     url=f"{opensearch_url}/{index_pattern}/_count"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     return jsonify(response.json())
@@ -154,11 +154,37 @@ def get_count_critical_count():
             }
         }
     }
-    index_pattern = "wazuh-alerts*"
+    index_pattern = "*"
     url=f"{opensearch_url}/{index_pattern}/_count"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     return jsonify(response.json())
 
+@app.route('/agent_event', methods=['GET'])
+def get_aggs_agent_event():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    query= {
+        "size": 0,
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": from_time,
+                    "lte": to_time
+                }
+            }
+        },
+        "aggs": {
+            "agent_names": {
+                "terms": {
+                    "field": "agent.name"
+                }
+            }
+        }
+    }
+    index_pattern = "*"
+    url=f"{opensearch_url}/{index_pattern}/_count"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    return jsonify(response.json())
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
