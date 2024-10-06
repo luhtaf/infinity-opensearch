@@ -197,32 +197,91 @@ def get_aggs_top10_alert():
     from_time = request.args.get('from')
     to_time = request.args.get('to')
     query= {
-    "size": 0,
-    "query": {
-        "range": {
+        "size": 0,
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": from_time,
+                    "lte": to_time
+                }
+            }
+        },
+        "aggs": {
+            "alert_level": {
+                "terms": {
+                    "field": "rule.level",
+                    "size": 10  
+                }
+            }
+        }
+    }
+    index_pattern = "*"
+    url=f"{opensearch_url}/{index_pattern}/_search"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    data = response.json()
+    return data
+
+@app.route('/vulnerability_severity_level', methods=['GET'])
+def get_aggs_vuln_severity_level():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    query = {
+        "size": 0,
+        "query": {
+            "range": {
             "@timestamp": {
                 "gte": from_time,
                 "lte": to_time
             }
-        }
-    },
-    "aggs": {
-        "alert_level": {
-            "terms": {
-                "field": "rule.level",
-                "size": 10  
+            }
+        },
+        "aggs": {
+            "severity_levels": {
+            "filters": {
+                "filters": {
+                "low": { "range": { "rule.level": { "gte": 0, "lte": 6 } } },
+                "medium": { "range": { "rule.level": { "gte": 7, "lte": 11 } } },
+                "high": { "range": { "rule.level": { "gte": 12, "lte": 14 } } },
+                "critical": { "range": { "rule.level": { "gte": 15 } } }
+                }
+            }
             }
         }
     }
-}
 
     index_pattern = "*"
     url=f"{opensearch_url}/{index_pattern}/_search"
     response = requests.get(url, headers=headers, json=query, auth=(username, password))
     data = response.json()
-    # buckets=buckets = data['aggregations']['agent_names']['buckets']
-    # result_dict = {bucket['key']: bucket['doc_count'] for bucket in buckets}
-    # return jsonify(result_dict)
+    return data
+
+@app.route('/top10_mitre', methods=['GET'])
+def get_aggs_top10_mitre():
+    from_time = request.args.get('from')
+    to_time = request.args.get('to')
+    query= {
+        "size": 0,
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": from_time,
+                    "lte": to_time
+                }
+            }
+        },
+        "aggs": {
+            "alert_level": {
+                "terms": {
+                    "field": "rule.mitre.technique",
+                    "size": 10  
+                }
+            }
+        }
+    }
+    index_pattern = "*"
+    url=f"{opensearch_url}/{index_pattern}/_search"
+    response = requests.get(url, headers=headers, json=query, auth=(username, password))
+    data = response.json()
     return data
 
 if __name__ == '__main__':
